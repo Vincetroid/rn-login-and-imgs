@@ -26,82 +26,26 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from './components/LoginScreen';
+import HomeScreen from './components/HomeScreen';
 
 const Stack = createStackNavigator();
-
-const HomeScreen = ({ navigation }) => {
-  return (
-    <Button
-      title="Go to Jane's profile"
-      onPress={() =>
-        navigation.navigate('Profile', { name: 'Jane' })
-      }
-    />
-  );
-};
-
-const ProfileScreen = ({ navigation, route }) => {
-  return <Text>This is {route.params.name}'s profile</Text>;
-};
 
 const App: () => React$Node = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ title: 'Log in' }}
+        />
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: 'Login' }}
-        />
-        <Stack.Screen 
-          name="Profile"
-          component={ProfileScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
-    // <>
-    //   <StatusBar barStyle="dark-content" />
-    //   <SafeAreaView>
-    //     <ScrollView
-    //       contentInsetAdjustmentBehavior="automatic"
-    //       style={styles.scrollView}>
-    //       <Header />
-    //       {global.HermesInternal == null ? null : (
-    //         <View style={styles.engine}>
-    //           <Text style={styles.footer}>Engine: Hermes</Text>
-    //         </View>
-    //       )}
-    //       <View style={styles.body}>
-    //         <View style={styles.sectionContainer}>
-    //           <Text style={styles.sectionTitle}>Step One</Text>
-    //           <Text style={styles.sectionDescription}>
-    //             Edita <Text style={styles.highlight}>App.js</Text> to change this
-    //             screen and then come back to see your edits.
-    //           </Text>
-    //         </View>
-    //         <View style={styles.sectionContainer}>
-    //           <Text style={styles.sectionTitle}>See Your Changes</Text>
-    //           <Text style={styles.sectionDescription}>
-    //             <ReloadInstructions />
-    //           </Text>
-    //         </View>
-    //         <View style={styles.sectionContainer}>
-    //           <Text style={styles.sectionTitle}>Debug</Text>
-    //           <Text style={styles.sectionDescription}>
-    //             <DebugInstructions />
-    //           </Text>
-    //         </View>
-    //         <View style={styles.sectionContainer}>
-    //           <Text style={styles.sectionTitle}>Learn More</Text>
-    //           <Text style={styles.sectionDescription}>
-    //             lee los docs
-    //           </Text>
-    //         </View>
-    //         <LearnMoreLinks />
-    //       </View>
-    //     </ScrollView>
-    //   </SafeAreaView>
-    // </>
   );
 };
 
