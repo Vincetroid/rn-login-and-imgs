@@ -11,8 +11,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default LoginScreen = ({navigation }) => {
 
-  const [emailState, setEmailState] = useState('challenge@maniak.co');
-  const [passwordState, setPasswordState] = useState('maniak2020');
+  // const [emailState, setEmailState] = useState('challenge@maniak.co');
+  // const [passwordState, setPasswordState] = useState('maniak2020');
+  const [emailState, setEmailState] = useState('');
+  const [passwordState, setPasswordState] = useState('');
 
   const onChangeEmailText = (t) => {
     setEmailState(t);

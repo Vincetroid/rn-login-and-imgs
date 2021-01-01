@@ -13,6 +13,9 @@ import LoginScreen from './components/LoginScreen';
 import HomeScreen from './components/HomeScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs;
 
 const Stack = createStackNavigator();
 
@@ -22,7 +25,7 @@ const App: () => React$Node = () => {
     try {
       const value = await AsyncStorage.getItem('@storage_Key')
       if(value !== null) {
-        Toast.show(value);
+        Toast.show('Welcome again!');
       }
     } catch(e) {
       Toast.show('There was an error reading your prev session');
