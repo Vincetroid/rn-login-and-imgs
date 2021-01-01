@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Button,
   StyleSheet,
   TextInput,
-  View
+  View,
+  Text
 } from 'react-native';
+import axios from 'axios';
+import Toast from 'react-native-simple-toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AuthContext from './AuthContext';
 
-export default LoginScreen = ({ navigation }) => {
+export default LoginScreen = ({ props, navigation }) => {
 
-  const [emailState, setEmailState] = useState('');
-  const [passwordState, setPasswordState] = useState('');
+  const [emailState, setEmailState] = useState('challenge@maniak.co');
+  const [passwordState, setPasswordState] = useState('maniak2020');
 
   const onChangeEmailText = (t) => {
     console.log(t)
@@ -21,10 +26,68 @@ export default LoginScreen = ({ navigation }) => {
     setPasswordState(p);
   }
 
-  const submitHandler = () => {
-    alert(55);
-    navigation.navigate('Home', { name: 'Jane' });
+  const submitHandler = async () => {
+    
+    try {
+      
+      const result = await axios.post('https://challenge.maniak.co/api/login', {
+        username: emailState,
+        password: passwordState
+      });
+
+      console.log('RESULT');
+      console.log(result.data);
+      console.log(result.data.token);
+      console.log(result.status);
+      console.log(`Status text: ${result.status}`);
+
+      if (result.status === 200) {
+        storeData(result.data.token);
+        Toast.show('Welcome!');
+        navigation.navigate('Home', { name: 'Jane' });
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        Toast.show('Incorrect email or password, please check your credentials');
+        return;
+      }
+      Toast.show('Something unexpected happened, please contact Maniak\'s support team');
+    }
   }
+
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('@storage_Key', value)
+    } catch (e) {
+      Toast.show('There was an error setting the session');
+      console.log('e')
+      console.log(e)
+    }
+  }
+
+  // const getData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem('@storage_Key')
+  //     if(value !== null) {
+  //       // value previously stored
+  //       Toast.show(value);
+  //     }
+  //   } catch(e) {
+  //     Toast.show('There was an error reading your prev session');
+  //   }
+  // }
+
+  useEffect(() => {
+    console.log('PROPS')
+    // const mmm = useContext(AuthContext);
+    // console.log(mmm)
+    console.log(this.props)
+
+  }, []);
+
+  const contextType = AuthContext;
+  console.log('contextType')
+  console.log(this.context)
 
   return (
     <View style={styles.wrapper}>

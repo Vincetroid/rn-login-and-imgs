@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect, useState, createContext } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -28,24 +28,69 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './components/LoginScreen';
 import HomeScreen from './components/HomeScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-simple-toast';
+import { AuthProvider } from './components/AuthContext';
 
+// const AuthContext = createContext();
+// const authContext = useContext(AuthContext);
 const Stack = createStackNavigator();
 
 const App: () => React$Node = () => {
+
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@storage_Key')
+      if(value !== null) {
+        // return value;
+        setIsSignedIn(true);
+        Toast.show(value);
+      }
+    } catch(e) {
+      Toast.show('There was an error reading your prev session');
+    }
+  }
+
+  const removeValue = async () => {
+    try {
+      await AsyncStorage.removeItem('@storage_Key')
+      setIsSignedIn(false);
+
+    } catch(e) {
+      Toast.show('There was an error removing the token');
+    }
+    Toast.show('Token removed');
+  }
+
+  useEffect(() => {
+    getData();
+    // removeValue();
+  }, []);
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ title: 'Log in' }}
-        />
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    // <AuthContext.Provider value={authContext}>
+    // <AuthContext.Provider value={isSignedIn}>
+    // <AuthProvider value={5}>
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {isSignedIn ? (
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+            />
+          ) : (
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ title: 'Log in' }}
+            />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 };
 
