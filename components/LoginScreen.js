@@ -1,45 +1,33 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   StyleSheet,
   TextInput,
-  View,
-  Text
+  View
 } from 'react-native';
 import axios from 'axios';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AuthContext from './AuthContext';
 
-export default LoginScreen = ({ props, navigation }) => {
+export default LoginScreen = ({navigation }) => {
 
   const [emailState, setEmailState] = useState('challenge@maniak.co');
   const [passwordState, setPasswordState] = useState('maniak2020');
 
   const onChangeEmailText = (t) => {
-    console.log(t)
     setEmailState(t);
   }
 
   const onChangePasswordText = (p) => {
-    console.log(p)
     setPasswordState(p);
   }
 
   const submitHandler = async () => {
-    
     try {
-      
       const result = await axios.post('https://challenge.maniak.co/api/login', {
         username: emailState,
         password: passwordState
       });
-
-      console.log('RESULT');
-      console.log(result.data);
-      console.log(result.data.token);
-      console.log(result.status);
-      console.log(`Status text: ${result.status}`);
 
       if (result.status === 200) {
         storeData(result.data.token);
@@ -60,34 +48,8 @@ export default LoginScreen = ({ props, navigation }) => {
       await AsyncStorage.setItem('@storage_Key', value)
     } catch (e) {
       Toast.show('There was an error setting the session');
-      console.log('e')
-      console.log(e)
     }
   }
-
-  // const getData = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem('@storage_Key')
-  //     if(value !== null) {
-  //       // value previously stored
-  //       Toast.show(value);
-  //     }
-  //   } catch(e) {
-  //     Toast.show('There was an error reading your prev session');
-  //   }
-  // }
-
-  useEffect(() => {
-    console.log('PROPS')
-    // const mmm = useContext(AuthContext);
-    // console.log(mmm)
-    console.log(this.props)
-
-  }, []);
-
-  const contextType = AuthContext;
-  console.log('contextType')
-  console.log(this.context)
 
   return (
     <View style={styles.wrapper}>
