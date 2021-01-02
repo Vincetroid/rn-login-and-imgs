@@ -73,7 +73,7 @@ export default HomeScreen = ({ navigation }) => {
         {images.map((img, index) => {
           console.log(img)
           return (
-            <View style={styles.cardContainer}>
+            <View style={styles.cardContainer} key={index}>
               <Text style={styles.cardTitle}>{img.title}</Text>
               <Text style={styles.cardDescription}>{img.description}</Text>
               <Text>{img.image}</Text>
