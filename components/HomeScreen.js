@@ -7,11 +7,14 @@ import {
   Text,
   StatusBar,
   Button,
-  Image
+  // Image
+  ActivityIndicator,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { Image } from 'react-native-elements';
+import Loader from '../components/Loader';
 
 export default HomeScreen = ({ navigation }) => {
 
@@ -32,22 +35,21 @@ export default HomeScreen = ({ navigation }) => {
       Toast.show('Loading images');
       setImages(result.data);
     } catch (error) {
-      if (error.response.status === 401) {
-        Toast.show('You\'re not authorized');
-        return;
-      }
-      Toast.show('Something unexpected happened, please contact Maniak\'s support team');
+      // if (error.response.status === 401) {
+      //   Toast.show('You\'re not authorized');
+      //   return;
+      // }
+      // Toast.show('Something unexpected happened, please contact Maniak\'s support team');
     }
   }
 
   const removeToken = async () => {
     try {
       await AsyncStorage.removeItem('@storage_Key')
-      navigation.navigate('Login');
+      navigation.navigate('Logout');
     } catch(e) {
-      Toast.show('There was an error removing the token');
+      Toast.show('There was an error closing the session');
     }
-    Toast.show('Token removed');
   }
 
   const getToken = async () => {
@@ -68,29 +70,43 @@ export default HomeScreen = ({ navigation }) => {
   }, [token]);
 
   return (
-    <ScrollView>
-      <View>
-        {images.map((img, index) => {
-          console.log(img)
-          return (
-            <View style={styles.cardContainer} key={index}>
-              <Text style={styles.cardTitle}>{img.title}</Text>
-              <Text style={styles.cardDescription}>{img.description}</Text>
-              <Text>{img.image}</Text>
-              <Image
-                // source={{uri: img.image}}
-                source={{uri: 'https://i2.cdn.turner.com/cnn/dam/assets/141216183300-simpsons-25-anniversary-image-4-horizontal-gallery.jpg'}}
-                style={{width: 300, height: 200}}
-              />
-            </View>
-          );
-        })}
-      </View>
-      <Button
-        title="Remove token"
-        onPress={() => removeToken()}
-      />
-    </ScrollView>
+    <>
+      {images.length === 0 ? (
+        <>
+          <Loader />
+          {/* <Button
+            title="Log Out"
+            onPress={() => removeToken()}
+          />  */}
+        </>
+      ) : (
+        <>
+          <ScrollView>
+            {images.map((img, index) => {
+              console.log(img)
+              return (
+                <View style={styles.cardContainer} key={index}>
+                  <Text style={styles.cardTitle}>{img.title}</Text>
+                  <Text style={styles.cardDescription}>{img.description}</Text>
+                  <Text>{img.image}</Text>
+                  <Image
+                    source={{uri: img.image}}
+                    style={{ width: 300, height: 200 }}
+                    PlaceholderContent={<ActivityIndicator size="large" color="#87CEFA" />}
+                    placeholderStyle={styles.imgPlaceholder}
+                  />
+                </View>
+              );
+            })}
+          </ScrollView>
+          <Button
+            title="Log Out"
+            onPress={() => removeToken()}
+            style={styles.btn}
+          /> 
+        </>
+      )}
+    </>
   );
 };
 
@@ -118,4 +134,11 @@ const styles = StyleSheet.create({
     margin: 30,
     marginBottom: 15,
   },
+  imgPlaceholder: {
+    backgroundColor: 'azure'
+  },
+  btn: {
+    position: 'absolute',
+    bottom: 0,
+  }
 });

@@ -11,10 +11,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default LoginScreen = ({navigation }) => {
 
-  // const [emailState, setEmailState] = useState('challenge@maniak.co');
-  // const [passwordState, setPasswordState] = useState('maniak2020');
-  const [emailState, setEmailState] = useState('');
-  const [passwordState, setPasswordState] = useState('');
+  const [emailState, setEmailState] = useState('challenge@maniak.co');
+  const [passwordState, setPasswordState] = useState('maniak2020');
+  // const [emailState, setEmailState] = useState('');
+  // const [passwordState, setPasswordState] = useState('');
 
   const onChangeEmailText = (t) => {
     setEmailState(t);
@@ -33,7 +33,7 @@ export default LoginScreen = ({navigation }) => {
 
       if (result.status === 200) {
         storeData(result.data.token);
-        Toast.show('Welcome!');
+        Toast.show('Welcome! Loading cards');
         navigation.navigate('Home', { name: 'Jane' });
       }
     } catch (error) {
@@ -54,37 +54,39 @@ export default LoginScreen = ({navigation }) => {
   }
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.inputsContainer}>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={text => onChangeEmailText(text)}
-          value={emailState}
-          autoCompleteType="email"
-          keyboardType="email-address"
-          placeholder="Email"
-          placeholderTextColor="gray"
-          returnKeyType="next"
-          textContentType="emailAddress"
-        />
-        <TextInput
-          style={styles.textInput}
-          onChangeText={text => onChangePasswordText(text)}
-          value={passwordState}
-          autoCompleteType="password"
-          keyboardType="default"
-          placeholder="Password"
-          placeholderTextColor="gray"
-          returnKeyType="next"
-          textContentType="password"
-          secureTextEntry
-        />
-        <Button
-          title="Log In"
-          onPress={() => submitHandler()}
-        />
+    <>
+      <View style={styles.wrapper}>
+        <View style={styles.inputsContainer}>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={text => onChangeEmailText(text)}
+            value={emailState}
+            autoCompleteType="email"
+            keyboardType="email-address"
+            placeholder="Email"
+            placeholderTextColor="gray"
+            returnKeyType="next"
+            textContentType="emailAddress"
+          />
+          <TextInput
+            style={styles.textInput}
+            onChangeText={text => onChangePasswordText(text)}
+            value={passwordState}
+            autoCompleteType="password"
+            keyboardType="default"
+            placeholder="Password"
+            placeholderTextColor="gray"
+            returnKeyType="next"
+            textContentType="password"
+            secureTextEntry
+          />
+        </View>
       </View>
-    </View>
+      <Button
+        title="Log In"
+        onPress={() => submitHandler()}
+      />
+    </>
   );
 };
 
@@ -101,6 +103,7 @@ const styles = StyleSheet.create({
   },
   inputsContainer: {
     display: 'flex',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
