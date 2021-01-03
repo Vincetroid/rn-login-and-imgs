@@ -9,9 +9,8 @@ import {
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { Image } from 'react-native-elements';
 import Loader from '../components/Loader';
-import PlaceHolderImg from '../components/PlaceHolderImg';
+import Card from '../components/Card';
 
 export default HomeScreen = ({ navigation }) => {
 
@@ -32,6 +31,7 @@ export default HomeScreen = ({ navigation }) => {
     } catch (error) {
       // if (error.response.status === 401) {
       //   Toast.show('You\'re not authorized');
+      //   console.log(error.response)
       //   return;
       // }
       // Toast.show('Something unexpected happened, please contact Maniak\'s support team');
@@ -71,22 +71,7 @@ export default HomeScreen = ({ navigation }) => {
       ) : (
         <>
           <ScrollView>
-            {images.map((img, index) => {
-              return (
-                <View style={styles.cardContainer} key={index}>
-                  <Text style={styles.cardTitle}>{img.title}</Text>
-                  <Text style={styles.cardDescription}>{img.description}</Text>
-                  <Image
-                    source={{uri: img.image}}
-                    style={{ width: 300, height: 200 }}
-                    PlaceholderContent={
-                      <PlaceHolderImg />
-                    }
-                    placeholderStyle={styles.imgPlaceholder}
-                  />
-                </View>
-              );
-            })}
+            {images.map((img, index) => <Card data={img} index={index} /> )}
           </ScrollView>
           <Button
             title="Log Out"

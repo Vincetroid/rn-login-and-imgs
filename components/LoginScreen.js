@@ -37,6 +37,10 @@ export default LoginScreen = ({navigation }) => {
         navigation.navigate('Home', { name: 'Jane' });
       }
     } catch (error) {
+      if (error.response.status === 400) {
+        Toast.show('Please write your credentials');
+        return;
+      }
       if (error.response.status === 401) {
         Toast.show('Incorrect email or password, please check your credentials');
         return;
