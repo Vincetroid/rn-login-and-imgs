@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
-  StatusBar,
   Button,
-  // Image
-  ActivityIndicator,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Image } from 'react-native-elements';
 import Loader from '../components/Loader';
+import PlaceHolderImg from '../components/PlaceHolderImg';
 
 export default HomeScreen = ({ navigation }) => {
 
@@ -30,8 +27,6 @@ export default HomeScreen = ({ navigation }) => {
           'Authorization': `Bearer ${token}`
         }
       });
-      console.log('RESPONSE')
-      console.log(result)
       Toast.show('Loading images');
       setImages(result.data);
     } catch (error) {
@@ -72,27 +67,21 @@ export default HomeScreen = ({ navigation }) => {
   return (
     <>
       {images.length === 0 ? (
-        <>
-          <Loader />
-          {/* <Button
-            title="Log Out"
-            onPress={() => removeToken()}
-          />  */}
-        </>
+        <Loader />
       ) : (
         <>
           <ScrollView>
             {images.map((img, index) => {
-              console.log(img)
               return (
                 <View style={styles.cardContainer} key={index}>
                   <Text style={styles.cardTitle}>{img.title}</Text>
                   <Text style={styles.cardDescription}>{img.description}</Text>
-                  <Text>{img.image}</Text>
                   <Image
                     source={{uri: img.image}}
                     style={{ width: 300, height: 200 }}
-                    PlaceholderContent={<ActivityIndicator size="large" color="#87CEFA" />}
+                    PlaceholderContent={
+                      <PlaceHolderImg />
+                    }
                     placeholderStyle={styles.imgPlaceholder}
                   />
                 </View>
@@ -135,7 +124,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   imgPlaceholder: {
-    backgroundColor: 'azure'
+    backgroundColor: 'azure',
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   btn: {
     position: 'absolute',

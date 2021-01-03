@@ -9,9 +9,6 @@ export default LogoutScreen = ({ navigation }) => {
 		setTimeout(()=>{
 			navigation.navigate('Login');
 		}, 1500);
-		// return () => {
-		// 	clearTimeout(this.timeoutHandle); 
-		// }
 	}, []);
 
 	return (
