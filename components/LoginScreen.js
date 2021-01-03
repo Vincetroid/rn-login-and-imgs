@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   StyleSheet,
@@ -56,6 +56,24 @@ export default LoginScreen = ({navigation }) => {
       Toast.show('There was an error setting the session');
     }
   }
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@storage_Key')
+      if(value !== null) {
+        Toast.show(value);
+        // setIsSignedIn(true);
+        navigation.navigate('Home');
+      }
+    } catch(e) {
+      Toast.show('There was an error reading your prev session');
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <>
